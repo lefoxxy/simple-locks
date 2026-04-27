@@ -1,0 +1,95 @@
+plugins {
+    id 'java-library'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = '0.1.0'
+group = 'dev.worldloom.simplelocks'
+
+base {
+    archivesName = 'simplelocks'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                simplelocks {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', 'simplelocks'
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', 'simplelocks'
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', 'simplelocks'
+        }
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.20'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version: '1.20.1',
+            minecraft_version_range: '[1.20.1,1.21)',
+            forge_version: '47.4.20',
+            forge_version_range: '[47.4.20,)',
+            loader_version_range: '[47,)',
+            mod_id: 'simplelocks',
+            mod_name: 'SimpleLocks',
+            mod_license: 'All Rights Reserved',
+            mod_version: project.version,
+            mod_group_id: project.group,
+            mod_authors: 'Worldloom by GOGLEO (GitHub: lefoxxy)',
+            mod_description: '''Lock your storage with intent.
+
+SimpleLocks allows players to lock containers using a named key item.
+Rename a tripwire hook to "Storage Key" and right-click a container to lock it.
+
+Only the owner can open locked containers.
+Non-owners are blocked and receive a message.
+
+No GUI. No clutter. Just simple, predictable protection.'''
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}

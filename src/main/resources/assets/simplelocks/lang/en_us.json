@@ -1,0 +1,8 @@
+{
+  "message.simplelocks.locked": "Container locked.",
+  "message.simplelocks.unlocked": "Container unlocked.",
+  "message.simplelocks.not_owner": "This container is locked.",
+  "message.simplelocks.already_locked": "This container is already locked.",
+  "message.simplelocks.invalid_lock": "This container has invalid lock data.",
+  "message.simplelocks.invalid_key": "This item must be named Storage Key."
+}
